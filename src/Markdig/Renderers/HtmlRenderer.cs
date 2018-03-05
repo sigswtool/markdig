@@ -76,6 +76,16 @@ namespace Markdig.Renderers
         public bool UseNonAsciiNoEscape { get; set; }
 
         /// <summary>
+        /// Gets a value to use as the base url for all relative links
+        /// </summary>
+        public Uri BaseUrl { get; set; }
+
+        /// <summary>
+        /// Allows links to be rewritten
+        /// </summary>
+        public Func<string,string> LinkRewriter { get; set; }
+
+        /// <summary>
         /// Writes the content escaped for HTML.
         /// </summary>
         /// <param name="content">The content.</param>
@@ -191,6 +201,16 @@ namespace Markdig.Renderers
         {
             if (content == null)
                 return this;
+
+            if (BaseUrl != null && !Uri.TryCreate(content, UriKind.Absolute, out Uri _))
+            {
+                content = new Uri(BaseUrl, content).AbsoluteUri;
+            }
+
+            if (LinkRewriter != null)
+            {
+                content = LinkRewriter(content);
+            }
 
             int previousPosition = 0;
             int length = content.Length;
