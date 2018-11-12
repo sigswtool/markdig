@@ -29,9 +29,11 @@ using Markdig.Extensions.SmartyPants;
 using Markdig.Extensions.NonAsciiNoEscape;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
+using Markdig.Extensions.TextRenderer;
 using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
+using Markdig.Extensions.Globalization;
 
 namespace Markdig
 {
@@ -97,9 +99,9 @@ namespace Markdig
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns>The modified pipeline</returns>
-        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline)
+        public static MarkdownPipelineBuilder UseAutoLinks(this MarkdownPipelineBuilder pipeline, string validPreviousCharacters = AutoLinkParser.DefaultValidPreviousCharacters)
         {
-            pipeline.Extensions.AddIfNotAlready<AutoLinkExtension>();
+            pipeline.Extensions.ReplaceOrAdd<AutoLinkExtension>(new AutoLinkExtension(validPreviousCharacters));
             return pipeline;
         }
 
@@ -460,6 +462,17 @@ namespace Markdig
         }
 
         /// <summary>
+        /// Adds support for right-to-left content by adding appropriate html attribtues.
+        /// </summary>
+        /// <param name="pipeline">The pipeline</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder UseGlobalization(this MarkdownPipelineBuilder pipeline)
+        {
+            pipeline.Extensions.AddIfNotAlready<GlobalizationExtension>();
+            return pipeline;
+        }
+
+        /// <summary>
         /// This will disable the HTML support in the markdown processor (for constraint/safe parsing).
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
@@ -582,10 +595,25 @@ namespace Markdig
                     case "autolinks":
                         pipeline.UseAutoLinks();
                         break;
+                    case "globalization":
+                        pipeline.UseGlobalization();
+                        break;
                     default:
                         throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
                 }
             }
+            return pipeline;
+        }
+
+        /// <summary>
+        /// Configures the string to be used for line-endings, when writing.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="newLine">The string to be used for line-endings.</param>
+        /// <returns>The modified pipeline</returns>
+        public static MarkdownPipelineBuilder ConfigureNewLine(this MarkdownPipelineBuilder pipeline, string newLine)
+        {
+            pipeline.Use(new ConfigureNewLineExtension(newLine));
             return pipeline;
         }
     }

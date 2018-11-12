@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Generated the 10/06/2018 18:03:17
+using System;
 using NUnit.Framework;
 
 namespace Markdig.Tests
@@ -17565,6 +17566,39 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^4].\n\n[^1]: Footnote 1 text\n[^2]: Footnote 2 text\n[^3]: Footnote 3 text\n[^4]: Footnote 4 text", "<p>Here is a footnote<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a>. And another one<a id=\"fnref:2\" href=\"#fn:2\" class=\"footnote-ref\"><sup>2</sup></a>. And a third one<a id=\"fnref:3\" href=\"#fn:3\" class=\"footnote-ref\"><sup>3</sup></a>. And a fourth<a id=\"fnref:4\" href=\"#fn:4\" class=\"footnote-ref\"><sup>4</sup></a>.</p>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Footnote 1 text<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:2\">\n<p>Footnote 2 text<a href=\"#fnref:2\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:3\">\n<p>Footnote 3 text<a href=\"#fnref:3\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n<li id=\"fn:4\">\n<p>Footnote 4 text<a href=\"#fnref:4\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes|advanced");
         }
     }
+        // A footnote link inside a list should work as well:
+    [TestFixture]
+    public partial class TestExtensionsFootontes
+    {
+        [Test]
+        public void ExtensionsFootontes_Example004()
+        {
+            // Example 4
+            // Section: Extensions Footontes
+            //
+            // The following CommonMark:
+            //     - abc
+            //     - def[^1]
+            //     
+            //     [^1]: Here is the footnote.
+            //
+            // Should be rendered as:
+            //     <ul>
+            //     <li>abc</li>
+            //     <li>def<a id="fnref:1" href="#fn:1" class="footnote-ref"><sup>1</sup></a></li>
+            //     </ul>
+            //     <div class="footnotes">
+            //     <hr />
+            //     <ol>
+            //     <li id="fn:1">
+            //     <p>Here is the footnote.<a href="#fnref:1" class="footnote-back-ref">&#8617;</a></p></li>
+            //     </ol>
+            //     </div>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 4, "Extensions Footontes");
+			TestParser.TestSpec("- abc\n- def[^1]\n\n[^1]: Here is the footnote.", "<ul>\n<li>abc</li>\n<li>def<a id=\"fnref:1\" href=\"#fn:1\" class=\"footnote-ref\"><sup>1</sup></a></li>\n</ul>\n<div class=\"footnotes\">\n<hr />\n<ol>\n<li id=\"fn:1\">\n<p>Here is the footnote.<a href=\"#fnref:1\" class=\"footnote-back-ref\">&#8617;</a></p></li>\n</ol>\n</div>", "footnotes|advanced");
+        }
+    }
         // # Extensions
         //
         // This section describes the different extensions supported:
@@ -18228,7 +18262,7 @@ namespace Markdig.Tests
         //
         // ## Custom Container
         //
-        // A custom container is similar to a fenced code block, but it is using the character `:` to declare a block (with at least 3 characters), and instead of generating a `<pre><code>...</code></pre>` it will generate a `<div>...</dib>` block.
+        // A custom container is similar to a fenced code block, but it is using the character `:` to declare a block (with at least 3 characters), and instead of generating a `<pre><code>...</code></pre>` it will generate a `<div>...</div>` block.
     [TestFixture]
     public partial class TestExtensionsCustomContainer
     {
@@ -20142,7 +20176,7 @@ namespace Markdig.Tests
 			TestParser.TestSpec("# This is a heading", "<h1 id=\"this-is-a-heading\">This is a heading</h1>", "autoidentifiers|advanced");
         }
     }
-        // Only punctuation `-`, `_` and `.` is kept, all over non letter characters are discarded.
+        // Only punctuation `-`, `_` and `.` is kept, all other non letter characters are discarded.
         // Consecutive same character `-`, `_` or `.` are rendered into a single one
         // Characters `-`, `_` and `.` at the end of the string are also discarded.
     [TestFixture]
@@ -20932,28 +20966,29 @@ namespace Markdig.Tests
 			TestParser.TestSpec("Check **http://www.a.com** or __http://www.b.com__", "<p>Check <strong><a href=\"http://www.a.com\">http://www.a.com</a></strong> or <strong><a href=\"http://www.b.com\">http://www.b.com</a></strong></p>", "autolinks|advanced");
         }
     }
+        // It is not mentioned by the spec, but empty emails won't be matched (only a subset of [RFC2368](https://tools.ietf.org/html/rfc2368) is supported by auto links):
+    [TestFixture]
+    public partial class TestExtensionsAutoLinks
+    {
+        [Test]
+        public void ExtensionsAutoLinks_Example008()
+        {
+            // Example 8
+            // Section: Extensions AutoLinks
+            //
+            // The following CommonMark:
+            //     mailto:email@test.com is okay, but mailto:@test.com is not
+            //
+            // Should be rendered as:
+            //     <p><a href="mailto:email@test.com">email@test.com</a> is okay, but mailto:@test.com is not</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions AutoLinks");
+			TestParser.TestSpec("mailto:email@test.com is okay, but mailto:@test.com is not", "<p><a href=\"mailto:email@test.com\">email@test.com</a> is okay, but mailto:@test.com is not</p>", "autolinks|advanced");
+        }
+    }
         // ### GFM Support
         //
         // Extract from [GFM Autolinks extensions specs](https://github.github.com/gfm/#autolinks-extension-)
-    [TestFixture]
-    public partial class TestExtensionsAutoLinksGFMSupport
-    {
-        [Test]
-        public void ExtensionsAutoLinksGFMSupport_Example008()
-        {
-            // Example 8
-            // Section: Extensions AutoLinks GFM Support
-            //
-            // The following CommonMark:
-            //     www.commonmark.org
-            //
-            // Should be rendered as:
-            //     <p><a href="http://www.commonmark.org">www.commonmark.org</a></p>
-
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 8, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("www.commonmark.org", "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>", "autolinks|advanced");
-        }
-    }
     [TestFixture]
     public partial class TestExtensionsAutoLinksGFMSupport
     {
@@ -20964,13 +20999,13 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     Visit www.commonmark.org/help for more information.
+            //     www.commonmark.org
             //
             // Should be rendered as:
-            //     <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
+            //     <p><a href="http://www.commonmark.org">www.commonmark.org</a></p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("Visit www.commonmark.org/help for more information.", "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>", "autolinks|advanced");
+			TestParser.TestSpec("www.commonmark.org", "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -20983,16 +21018,13 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     Visit www.commonmark.org.
-            //     
-            //     Visit www.commonmark.org/a.b.
+            //     Visit www.commonmark.org/help for more information.
             //
             // Should be rendered as:
-            //     <p>Visit <a href="http://www.commonmark.org">www.commonmark.org</a>.</p>
-            //     <p>Visit <a href="http://www.commonmark.org/a.b">www.commonmark.org/a.b</a>.</p>
+            //     <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 10, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.", "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>", "autolinks|advanced");
+			TestParser.TestSpec("Visit www.commonmark.org/help for more information.", "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -21005,16 +21037,16 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     www.google.com/search?q=Markup+(business)
+            //     Visit www.commonmark.org.
             //     
-            //     (www.google.com/search?q=Markup+(business))
+            //     Visit www.commonmark.org/a.b.
             //
             // Should be rendered as:
-            //     <p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
-            //     <p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
+            //     <p>Visit <a href="http://www.commonmark.org">www.commonmark.org</a>.</p>
+            //     <p>Visit <a href="http://www.commonmark.org/a.b">www.commonmark.org/a.b</a>.</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 11, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("www.google.com/search?q=Markup+(business)\n\n(www.google.com/search?q=Markup+(business))", "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>", "autolinks|advanced");
+			TestParser.TestSpec("Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.", "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -21027,16 +21059,16 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     www.google.com/search?q=commonmark&hl=en
+            //     www.google.com/search?q=Markup+(business)
             //     
-            //     www.google.com/search?q=commonmark&hl;
+            //     (www.google.com/search?q=Markup+(business))
             //
             // Should be rendered as:
-            //     <p><a href="http://www.google.com/search?q=commonmark&amp;hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
-            //     <p><a href="http://www.google.com/search?q=commonmark">www.google.com/search?q=commonmark</a>&amp;hl;</p>
+            //     <p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
+            //     <p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 12, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;", "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>", "autolinks|advanced");
+			TestParser.TestSpec("www.google.com/search?q=Markup+(business)\n\n(www.google.com/search?q=Markup+(business))", "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -21049,13 +21081,16 @@ namespace Markdig.Tests
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
-            //     www.commonmark.org/he<lp
+            //     www.google.com/search?q=commonmark&hl=en
+            //     
+            //     www.google.com/search?q=commonmark&hl;
             //
             // Should be rendered as:
-            //     <p><a href="http://www.commonmark.org/he">www.commonmark.org/he</a>&lt;lp</p>
+            //     <p><a href="http://www.google.com/search?q=commonmark&amp;hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
+            //     <p><a href="http://www.google.com/search?q=commonmark">www.google.com/search?q=commonmark</a>&amp;hl;</p>
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 13, "Extensions AutoLinks GFM Support");
-			TestParser.TestSpec("www.commonmark.org/he<lp", "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>", "autolinks|advanced");
+			TestParser.TestSpec("www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;", "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>", "autolinks|advanced");
         }
     }
     [TestFixture]
@@ -21065,6 +21100,25 @@ namespace Markdig.Tests
         public void ExtensionsAutoLinksGFMSupport_Example014()
         {
             // Example 14
+            // Section: Extensions AutoLinks GFM Support
+            //
+            // The following CommonMark:
+            //     www.commonmark.org/he<lp
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www.commonmark.org/he">www.commonmark.org/he</a>&lt;lp</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions AutoLinks GFM Support");
+			TestParser.TestSpec("www.commonmark.org/he<lp", "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>", "autolinks|advanced");
+        }
+    }
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksGFMSupport
+    {
+        [Test]
+        public void ExtensionsAutoLinksGFMSupport_Example015()
+        {
+            // Example 15
             // Section: Extensions AutoLinks GFM Support
             //
             // The following CommonMark:
@@ -21079,8 +21133,128 @@ namespace Markdig.Tests
             //     <p>(Visit <a href="https://encrypted.google.com/search?q=Markup+(business)">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>
             //     <p>Anonymous FTP is available at <a href="ftp://foo.bar.baz">ftp://foo.bar.baz</a>.</p>
 
-            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 14, "Extensions AutoLinks GFM Support");
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 15, "Extensions AutoLinks GFM Support");
 			TestParser.TestSpec("http://commonmark.org\n\n(Visit https://encrypted.google.com/search?q=Markup+(business))\n\nAnonymous FTP is available at ftp://foo.bar.baz.", "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business)\">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>", "autolinks|advanced");
+        }
+    }
+        // ### Valid Domain Tests
+        //
+        // Domain names that have empty segments won't be matched
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksValidDomainTests
+    {
+        [Test]
+        public void ExtensionsAutoLinksValidDomainTests_Example016()
+        {
+            // Example 16
+            // Section: Extensions AutoLinks Valid Domain Tests
+            //
+            // The following CommonMark:
+            //     www..
+            //     www..com
+            //     http://test.
+            //     http://.test
+            //     http://.
+            //     http://..
+            //     ftp://test.
+            //     ftp://.test
+            //     mailto:email@test.
+            //     mailto:email@.test
+            //
+            // Should be rendered as:
+            //     <p>www..
+            //     www..com
+            //     http://test.
+            //     http://.test
+            //     http://.
+            //     http://..
+            //     ftp://test.
+            //     ftp://.test
+            //     mailto:email@test.
+            //     mailto:email@.test</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 16, "Extensions AutoLinks Valid Domain Tests");
+			TestParser.TestSpec("www..\nwww..com\nhttp://test.\nhttp://.test\nhttp://.\nhttp://..\nftp://test.\nftp://.test\nmailto:email@test.\nmailto:email@.test", "<p>www..\nwww..com\nhttp://test.\nhttp://.test\nhttp://.\nhttp://..\nftp://test.\nftp://.test\nmailto:email@test.\nmailto:email@.test</p>", "autolinks|advanced");
+        }
+    }
+        // Domain names with too few segments won't be matched
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksValidDomainTests
+    {
+        [Test]
+        public void ExtensionsAutoLinksValidDomainTests_Example017()
+        {
+            // Example 17
+            // Section: Extensions AutoLinks Valid Domain Tests
+            //
+            // The following CommonMark:
+            //     www
+            //     www.com
+            //     http://test
+            //     ftp://test
+            //     mailto:email@test
+            //
+            // Should be rendered as:
+            //     <p>www
+            //     www.com
+            //     http://test
+            //     ftp://test
+            //     mailto:email@test</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 17, "Extensions AutoLinks Valid Domain Tests");
+			TestParser.TestSpec("www\nwww.com\nhttp://test\nftp://test\nmailto:email@test", "<p>www\nwww.com\nhttp://test\nftp://test\nmailto:email@test</p>", "autolinks|advanced");
+        }
+    }
+        // Domain names that contain an underscores in the last two segments won't be matched
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksValidDomainTests
+    {
+        [Test]
+        public void ExtensionsAutoLinksValidDomainTests_Example018()
+        {
+            // Example 18
+            // Section: Extensions AutoLinks Valid Domain Tests
+            //
+            // The following CommonMark:
+            //     www._test.foo.bar is okay, but www._test.foo is not
+            //     
+            //     http://te_st.foo.bar is okay, as is http://test.foo_.bar.foo
+            //     
+            //     But http://te_st.foo, http://test.foo_.bar and http://test._foo are not
+            //     
+            //     ftp://test_.foo.bar is okay, but ftp://test.fo_o is not
+            //     
+            //     mailto:email@_test.foo.bar is okay, but mailto:email@_test.foo is not
+            //
+            // Should be rendered as:
+            //     <p><a href="http://www._test.foo.bar">www._test.foo.bar</a> is okay, but www._test.foo is not</p>
+            //     <p><a href="http://te_st.foo.bar">http://te_st.foo.bar</a> is okay, as is <a href="http://test.foo_.bar.foo">http://test.foo_.bar.foo</a></p>
+            //     <p>But http://te_st.foo, http://test.foo_.bar and http://test._foo are not</p>
+            //     <p><a href="ftp://test_.foo.bar">ftp://test_.foo.bar</a> is okay, but ftp://test.fo_o is not</p>
+            //     <p><a href="mailto:email@_test.foo.bar">email@_test.foo.bar</a> is okay, but mailto:email@_test.foo is not</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 18, "Extensions AutoLinks Valid Domain Tests");
+			TestParser.TestSpec("www._test.foo.bar is okay, but www._test.foo is not\n\nhttp://te_st.foo.bar is okay, as is http://test.foo_.bar.foo\n\nBut http://te_st.foo, http://test.foo_.bar and http://test._foo are not\n\nftp://test_.foo.bar is okay, but ftp://test.fo_o is not\n\nmailto:email@_test.foo.bar is okay, but mailto:email@_test.foo is not", "<p><a href=\"http://www._test.foo.bar\">www._test.foo.bar</a> is okay, but www._test.foo is not</p>\n<p><a href=\"http://te_st.foo.bar\">http://te_st.foo.bar</a> is okay, as is <a href=\"http://test.foo_.bar.foo\">http://test.foo_.bar.foo</a></p>\n<p>But http://te_st.foo, http://test.foo_.bar and http://test._foo are not</p>\n<p><a href=\"ftp://test_.foo.bar\">ftp://test_.foo.bar</a> is okay, but ftp://test.fo_o is not</p>\n<p><a href=\"mailto:email@_test.foo.bar\">email@_test.foo.bar</a> is okay, but mailto:email@_test.foo is not</p>", "autolinks|advanced");
+        }
+    }
+        // Domain names that contain invalid characters (not AlphaNumberic, -, _ or .) won't be matched
+    [TestFixture]
+    public partial class TestExtensionsAutoLinksValidDomainTests
+    {
+        [Test]
+        public void ExtensionsAutoLinksValidDomainTests_Example019()
+        {
+            // Example 19
+            // Section: Extensions AutoLinks Valid Domain Tests
+            //
+            // The following CommonMark:
+            //     https://[your-domain]/api
+            //
+            // Should be rendered as:
+            //     <p>https://[your-domain]/api</p>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 19, "Extensions AutoLinks Valid Domain Tests");
+			TestParser.TestSpec("https://[your-domain]/api", "<p>https://[your-domain]/api</p>", "autolinks|advanced");
         }
     }
         // ## Jira Links
@@ -21273,6 +21447,234 @@ namespace Markdig.Tests
 
             Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 9, " Jira Links");
 			TestParser.TestSpec("This is not JIRA- issue", "<p>This is not JIRA- issue</p>", "jiralinks");
+        }
+    }
+        // # Extensions
+        //
+        // This section describes the different extensions supported:
+        //
+        // ## Globalization
+        // Adds support for RTL content by adding `dir="rtl"` and `align="right` attributes to the appropriate html elements. Left to right text is not affected by this extension.
+        //
+        // Whether a markdown block is marked as RTL or not is determined by the [first strong character](https://en.wikipedia.org/wiki/Bi-directional_text#Strong_characters) of the block.
+        //
+        // **Note**: You might need to add `<meta charset="UTF-8">` to the head of the html file to be able to see the result correctly.
+        //
+        // Headings and block quotes:
+    [TestFixture]
+    public partial class TestExtensionsGlobalization
+    {
+        [Test]
+        public void ExtensionsGlobalization_Example001()
+        {
+            // Example 1
+            // Section: Extensions Globalization
+            //
+            // The following CommonMark:
+            //     # Fruits
+            //     In botany, a [fruit](https://en.wikipedia.org/wiki/Fruit) is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.
+            //     
+            //     > Fruits are good for health
+            //     -- Anonymous
+            //     
+            //     # میوە
+            //     [میوە](https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95) یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو
+            //     
+            //     > میوە بۆ تەندروستی باشە
+            //     -- نەزانراو
+            //
+            // Should be rendered as:
+            //     <h1 id="fruits">Fruits</h1>
+            //     <p>In botany, a <a href="https://en.wikipedia.org/wiki/Fruit">fruit</a> is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.</p>
+            //     <blockquote>
+            //     <p>Fruits are good for health
+            //     -- Anonymous</p>
+            //     </blockquote>
+            //     <h1 id="section" dir="rtl">میوە</h1>
+            //     <p dir="rtl"><a href="https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95" dir="rtl">میوە</a> یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو</p>
+            //     <blockquote dir="rtl">
+            //     <p dir="rtl">میوە بۆ تەندروستی باشە
+            //     -- نەزانراو</p>
+            //     </blockquote>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 1, "Extensions Globalization");
+			TestParser.TestSpec("# Fruits\nIn botany, a [fruit](https://en.wikipedia.org/wiki/Fruit) is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.\n\n> Fruits are good for health\n-- Anonymous\n\n# میوە\n[میوە](https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95) یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو\n\n> میوە بۆ تەندروستی باشە\n-- نەزانراو", "<h1 id=\"fruits\">Fruits</h1>\n<p>In botany, a <a href=\"https://en.wikipedia.org/wiki/Fruit\">fruit</a> is the seed-bearing structure in flowering plants (also known as angiosperms) formed from the ovary after flowering.</p>\n<blockquote>\n<p>Fruits are good for health\n-- Anonymous</p>\n</blockquote>\n<h1 id=\"section\" dir=\"rtl\">میوە</h1>\n<p dir=\"rtl\"><a href=\"https://ckb.wikipedia.org/wiki/%D9%85%DB%8C%D9%88%DB%95\" dir=\"rtl\">میوە</a> یان مێوە بەروبوومی ڕوەکیە کە ڕوەکەکان ھەڵیان ئەگرن وەک بەرگێک بۆ تۆوەکانیان، بە زۆری جیادەکرێتەوە بە شیرینی یان ترشی لە تامدا و بە بوونی بڕێکی زۆر ئاو</p>\n<blockquote dir=\"rtl\">\n<p dir=\"rtl\">میوە بۆ تەندروستی باشە\n-- نەزانراو</p>\n</blockquote>", "globalization+advanced+emojis");
+        }
+    }
+        // Lists:
+    [TestFixture]
+    public partial class TestExtensionsGlobalization
+    {
+        [Test]
+        public void ExtensionsGlobalization_Example002()
+        {
+            // Example 2
+            // Section: Extensions Globalization
+            //
+            // The following CommonMark:
+            //     ## Types of fruits
+            //     - Berries
+            //       - Strawberry
+            //       - kiwifruit
+            //     - Citrus
+            //       - Orange
+            //       - Lemon
+            //     
+            //     ## Examples of fruits :yum:
+            //     1. Apple
+            //     2. Banana
+            //     3. Orange
+            //     
+            //     ## Grocery List
+            //     - [X] 􏿽 Watermelon
+            //     - [X] Apricot
+            //     - [ ] Fig 
+            //     
+            //     ## نموونەی میوە :yum:
+            //     1. ? سێو
+            //     2. 5 مۆز 
+            //     3. 􏿽 پرتەقاڵ
+            //     
+            //     ## جۆرەکانی میوە
+            //     - توو
+            //       - فڕاولە
+            //       - کیوی
+            //     - مزرەمەنی
+            //       - پڕتەقاڵ
+            //       - لیمۆ
+            //     
+            //     ## لیستی کڕین
+            //     - [X] شووتی
+            //     - [X] قەیسی
+            //     - [ ] هەنجیر
+            //
+            // Should be rendered as:
+            //     <h2 id="types-of-fruits">Types of fruits</h2>
+            //     <ul>
+            //     <li>Berries
+            //     <ul>
+            //     <li>Strawberry</li>
+            //     <li>kiwifruit</li>
+            //     </ul>
+            //     </li>
+            //     <li>Citrus
+            //     <ul>
+            //     <li>Orange</li>
+            //     <li>Lemon</li>
+            //     </ul>
+            //     </li>
+            //     </ul>
+            //     <h2 id="examples-of-fruits">Examples of fruits 😋</h2>
+            //     <ol>
+            //     <li>Apple</li>
+            //     <li>Banana</li>
+            //     <li>Orange</li>
+            //     </ol>
+            //     <h2 id="grocery-list">Grocery List</h2>
+            //     <ul class="contains-task-list">
+            //     <li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> 􏿽 Watermelon</li>
+            //     <li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Apricot</li>
+            //     <li class="task-list-item"><input disabled="disabled" type="checkbox" /> Fig</li>
+            //     </ul>
+            //     <h2 id="section" dir="rtl">نموونەی میوە 😋</h2>
+            //     <ol dir="rtl">
+            //     <li>? سێو</li>
+            //     <li>5 مۆز</li>
+            //     <li>􏿽 پرتەقاڵ</li>
+            //     </ol>
+            //     <h2 id="section-1" dir="rtl">جۆرەکانی میوە</h2>
+            //     <ul dir="rtl">
+            //     <li>توو
+            //     <ul dir="rtl">
+            //     <li>فڕاولە</li>
+            //     <li>کیوی</li>
+            //     </ul>
+            //     </li>
+            //     <li>مزرەمەنی
+            //     <ul dir="rtl">
+            //     <li>پڕتەقاڵ</li>
+            //     <li>لیمۆ</li>
+            //     </ul>
+            //     </li>
+            //     </ul>
+            //     <h2 id="section-2" dir="rtl">لیستی کڕین</h2>
+            //     <ul class="contains-task-list" dir="rtl">
+            //     <li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> شووتی</li>
+            //     <li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> قەیسی</li>
+            //     <li class="task-list-item"><input disabled="disabled" type="checkbox" /> هەنجیر</li>
+            //     </ul>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 2, "Extensions Globalization");
+			TestParser.TestSpec("## Types of fruits\n- Berries\n  - Strawberry\n  - kiwifruit\n- Citrus\n  - Orange\n  - Lemon\n\n## Examples of fruits :yum:\n1. Apple\n2. Banana\n3. Orange\n\n## Grocery List\n- [X] 􏿽 Watermelon\n- [X] Apricot\n- [ ] Fig \n\n## نموونەی میوە :yum:\n1. ? سێو\n2. 5 مۆز \n3. 􏿽 پرتەقاڵ\n\n## جۆرەکانی میوە\n- توو\n  - فڕاولە\n  - کیوی\n- مزرەمەنی\n  - پڕتەقاڵ\n  - لیمۆ\n\n## لیستی کڕین\n- [X] شووتی\n- [X] قەیسی\n- [ ] هەنجیر", "<h2 id=\"types-of-fruits\">Types of fruits</h2>\n<ul>\n<li>Berries\n<ul>\n<li>Strawberry</li>\n<li>kiwifruit</li>\n</ul>\n</li>\n<li>Citrus\n<ul>\n<li>Orange</li>\n<li>Lemon</li>\n</ul>\n</li>\n</ul>\n<h2 id=\"examples-of-fruits\">Examples of fruits 😋</h2>\n<ol>\n<li>Apple</li>\n<li>Banana</li>\n<li>Orange</li>\n</ol>\n<h2 id=\"grocery-list\">Grocery List</h2>\n<ul class=\"contains-task-list\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> 􏿽 Watermelon</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> Apricot</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> Fig</li>\n</ul>\n<h2 id=\"section\" dir=\"rtl\">نموونەی میوە 😋</h2>\n<ol dir=\"rtl\">\n<li>? سێو</li>\n<li>5 مۆز</li>\n<li>􏿽 پرتەقاڵ</li>\n</ol>\n<h2 id=\"section-1\" dir=\"rtl\">جۆرەکانی میوە</h2>\n<ul dir=\"rtl\">\n<li>توو\n<ul dir=\"rtl\">\n<li>فڕاولە</li>\n<li>کیوی</li>\n</ul>\n</li>\n<li>مزرەمەنی\n<ul dir=\"rtl\">\n<li>پڕتەقاڵ</li>\n<li>لیمۆ</li>\n</ul>\n</li>\n</ul>\n<h2 id=\"section-2\" dir=\"rtl\">لیستی کڕین</h2>\n<ul class=\"contains-task-list\" dir=\"rtl\">\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> شووتی</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" checked=\"checked\" /> قەیسی</li>\n<li class=\"task-list-item\"><input disabled=\"disabled\" type=\"checkbox\" /> هەنجیر</li>\n</ul>", "globalization+advanced+emojis");
+        }
+    }
+        // Tables:
+    [TestFixture]
+    public partial class TestExtensionsGlobalization
+    {
+        [Test]
+        public void ExtensionsGlobalization_Example003()
+        {
+            // Example 3
+            // Section: Extensions Globalization
+            //
+            // The following CommonMark:
+            //     Nuitrion |Apple | Oranges
+            //     --|-- | --
+            //     Calories|52|47
+            //     Sugar|10g|9g
+            //     
+            //      پێکهاتە |سێو | پڕتەقاڵ
+            //     --|-- | --
+            //     کالۆری|٥٢|٤٧
+            //     شەکر| ١٠گ|٩گ
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>Nuitrion</th>
+            //     <th>Apple</th>
+            //     <th>Oranges</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>Calories</td>
+            //     <td>52</td>
+            //     <td>47</td>
+            //     </tr>
+            //     <tr>
+            //     <td>Sugar</td>
+            //     <td>10g</td>
+            //     <td>9g</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+            //     <table dir="rtl" align="right">
+            //     <thead>
+            //     <tr>
+            //     <th>پێکهاتە</th>
+            //     <th>سێو</th>
+            //     <th>پڕتەقاڵ</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>کالۆری</td>
+            //     <td>٥٢</td>
+            //     <td>٤٧</td>
+            //     </tr>
+            //     <tr>
+            //     <td>شەکر</td>
+            //     <td>١٠گ</td>
+            //     <td>٩گ</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            Console.WriteLine("Example {0}" + Environment.NewLine + "Section: {0}" + Environment.NewLine, 3, "Extensions Globalization");
+			TestParser.TestSpec("Nuitrion |Apple | Oranges\n--|-- | --\nCalories|52|47\nSugar|10g|9g\n\n پێکهاتە |سێو | پڕتەقاڵ\n--|-- | --\nکالۆری|٥٢|٤٧\nشەکر| ١٠گ|٩گ", "<table>\n<thead>\n<tr>\n<th>Nuitrion</th>\n<th>Apple</th>\n<th>Oranges</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Calories</td>\n<td>52</td>\n<td>47</td>\n</tr>\n<tr>\n<td>Sugar</td>\n<td>10g</td>\n<td>9g</td>\n</tr>\n</tbody>\n</table>\n<table dir=\"rtl\" align=\"right\">\n<thead>\n<tr>\n<th>پێکهاتە</th>\n<th>سێو</th>\n<th>پڕتەقاڵ</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>کالۆری</td>\n<td>٥٢</td>\n<td>٤٧</td>\n</tr>\n<tr>\n<td>شەکر</td>\n<td>١٠گ</td>\n<td>٩گ</td>\n</tr>\n</tbody>\n</table>", "globalization+advanced+emojis");
         }
     }
 }

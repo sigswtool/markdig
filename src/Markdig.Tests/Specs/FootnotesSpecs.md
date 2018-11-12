@@ -2,7 +2,7 @@
 
 This section describes the different extensions supported:
 
-## Footontes
+## Footnotes
 
 Allows footnotes using the following syntax (taken from pandoc example):
 
@@ -115,6 +115,27 @@ Here is a footnote[^1]. And another one[^2]. And a third one[^3]. And a fourth[^
 <p>Footnote 3 text<a href="#fnref:3" class="footnote-back-ref">&#8617;</a></p></li>
 <li id="fn:4">
 <p>Footnote 4 text<a href="#fnref:4" class="footnote-back-ref">&#8617;</a></p></li>
+</ol>
+</div>
+````````````````````````````````
+
+A footnote link inside a list should work as well:
+
+```````````````````````````````` example
+- abc
+- def[^1]
+
+[^1]: Here is the footnote.
+.
+<ul>
+<li>abc</li>
+<li>def<a id="fnref:1" href="#fn:1" class="footnote-ref"><sup>1</sup></a></li>
+</ul>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Here is the footnote.<a href="#fnref:1" class="footnote-back-ref">&#8617;</a></p></li>
 </ol>
 </div>
 ````````````````````````````````

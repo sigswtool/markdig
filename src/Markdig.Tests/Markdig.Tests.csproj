@@ -57,6 +57,7 @@
       <DependentUpon>Specs.tt</DependentUpon>
     </Compile>
     <Compile Include="Specs\TestEmphasisPlus.cs" />
+    <Compile Include="TestConfigureNewLine.cs" />
     <Compile Include="TestHtmlAttributes.cs" />
     <Compile Include="TestHtmlHelper.cs" />
     <Compile Include="TestLineReader.cs" />
@@ -76,6 +77,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="project.json" />
+    <None Include="Specs\GlobalizationSpecs.md" />
     <None Include="Specs\JiraLinks.md" />
     <None Include="Specs\AutoLinks.md" />
     <None Include="Specs\AutoIdentifierSpecs.md" />

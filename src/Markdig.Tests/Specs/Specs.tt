@@ -1,6 +1,6 @@
 <#/*
 Copyright (c) Alexandre Mutel. All rights reserved.
-This file is licensed under the BSD-Clause 2 license. 
+This file is licensed under the BSD-Clause 2 license.
 See the license.txt file in the project root for more information.The MIT License (MIT)
 
 This is a modified version of code released previously with the following license:
@@ -63,10 +63,12 @@ SOFTWARE.
 		new KeyValuePair<string, string>(Host.ResolvePath("YamlSpecs.md"), "yaml"),
 		new KeyValuePair<string, string>(Host.ResolvePath("AutoLinks.md"), "autolinks|advanced"),
 		new KeyValuePair<string, string>(Host.ResolvePath("JiraLinks.md"), "jiralinks"),
+        new KeyValuePair<string, string>(Host.ResolvePath("GlobalizationSpecs.md"), "globalization+advanced+emojis"),
 	};
     var emptyLines = false;
     var displayEmptyLines = false;
 #>
+// Generated the <#= DateTime.Now #>
 using System;
 using NUnit.Framework;
 
